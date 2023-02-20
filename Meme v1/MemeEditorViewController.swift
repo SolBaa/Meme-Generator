@@ -16,7 +16,7 @@ class MemeEditorViewController: UIViewController {
         .strokeColor: UIColor.black,
         .foregroundColor: UIColor.white,
         .font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
-        .strokeWidth: -2.0
+        .strokeWidth: -3.5
     ]
     
     //MARK: IBOutlet definitions
@@ -33,7 +33,12 @@ class MemeEditorViewController: UIViewController {
     //MARK: activity functions
     override func viewDidLoad() {
         super.viewDidLoad()
-        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        #if targetEnvironment(simulator)
+    cameraButton.isEnabled = false;
+        #else
+    cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera);
+        #endif
+      
         resetState()
         topTextField.delegate = self
         bottomTextField.delegate = self
@@ -64,7 +69,7 @@ class MemeEditorViewController: UIViewController {
     @objc func keyboardWillShow(_ notification: Notification) {
         //reaise keyboard for lower text only
         if bottomTextField.isEditing {
-            view.frame.origin.y -= getKeyboardHeight(notification)
+            view.frame.origin.y = -getKeyboardHeight(notification)
         }
     }
     
